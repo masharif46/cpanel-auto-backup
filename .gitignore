@@ -1,0 +1,43 @@
+# Log files
+*.log
+logs/
+/var/log/cpanel-auto-backup/
+
+# Backups produced by the tool (never check in)
+backup-*/
+*.tar.gz
+*.tgz
+*.sql.gz
+
+# Local scratch / release prep
+.release-notes-*.md
+.notes/
+tmp/
+scratch/
+test-output/
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Python / misc tooling cache
+__pycache__/
+*.pyc
+.shellcheck-cache/
+
+# Secrets (defence in depth — never commit these)
+*.pem
+*.key
+*.crt
+.env
+.env.*
+!.env.example
+my.cnf
+.my.cnf
+credentials
+backup.conf

@@ -1,0 +1,84 @@
+# cpanel-auto-backup — configuration
+# ==================================
+# Copy this file to /etc/cpanel-auto-backup/backup.conf and edit.
+#
+# Permissions: the file may contain remote credentials, keep it root-only:
+#   chmod 600 /etc/cpanel-auto-backup/backup.conf
+#   chown root:root /etc/cpanel-auto-backup/backup.conf
+#
+# The file is sourced as a Bash script. Quote values that contain spaces.
+
+# ----------------------------------------------------------------------------
+# Local backup storage
+# ----------------------------------------------------------------------------
+# Root under which each run creates a timestamped directory:
+#   ${BACKUP_ROOT}/YYYY-MM-DD_HHMMSS/
+BACKUP_ROOT="/backup/cpanel"
+
+# ----------------------------------------------------------------------------
+# Retention
+# ----------------------------------------------------------------------------
+# Keep this many most-recent daily runs.
+RETENTION_DAYS=7
+
+# Optionally also keep the newest run from each of the last N ISO weeks
+# and months. Set to 0 to disable.
+RETENTION_WEEKLY=4
+RETENTION_MONTHLY=6
+
+# ----------------------------------------------------------------------------
+# Account selection
+# ----------------------------------------------------------------------------
+# Space-separated lists. Empty INCLUDE means "all accounts".
+# EXCLUDE always wins over INCLUDE.
+INCLUDE_ACCOUNTS=""
+EXCLUDE_ACCOUNTS=""
+
+# Skip heavy pieces of the account tarball (0=include, 1=skip).
+BACKUP_SKIP_HOMEDIR=0
+BACKUP_SKIP_EMAIL=0
+BACKUP_SKIP_LOGS=1
+BACKUP_SKIP_MAILMAN=1
+
+# ----------------------------------------------------------------------------
+# Remote upload
+# ----------------------------------------------------------------------------
+# Driver: rsync | s3 | sftp | none
+REMOTE_DRIVER="none"
+
+# --- rsync driver -----------------------------------------------------------
+# REMOTE_RSYNC_TARGET="backup@nas.example.com:/srv/backups/cpanel"
+# REMOTE_RSYNC_SSH_KEY="/root/.ssh/id_rsa"
+# REMOTE_RSYNC_OPTS="--bwlimit=20000"
+
+# --- S3 driver (AWS or any S3-compatible: Wasabi, DO Spaces, MinIO) --------
+# REMOTE_S3_BUCKET="my-backup-bucket"
+# REMOTE_S3_PREFIX="cpanel-backups/prod"
+# REMOTE_S3_ENDPOINT=""               # leave empty for AWS
+# REMOTE_S3_SC="STANDARD_IA"          # STANDARD, STANDARD_IA, GLACIER, DEEP_ARCHIVE
+# export AWS_ACCESS_KEY_ID="..."
+# export AWS_SECRET_ACCESS_KEY="..."
+# export AWS_DEFAULT_REGION="us-east-1"
+
+# --- SFTP driver ------------------------------------------------------------
+# REMOTE_SFTP_HOST="backup.example.com"
+# REMOTE_SFTP_PORT=22
+# REMOTE_SFTP_USER="backup"
+# REMOTE_SFTP_SSH_KEY="/root/.ssh/id_rsa"   # preferred over password
+# REMOTE_SFTP_PASS=""                       # used only if no key provided
+# REMOTE_SFTP_PATH="/srv/backups/cpanel"
+
+# ----------------------------------------------------------------------------
+# Notifications
+# ----------------------------------------------------------------------------
+# When to fire: success | failure | always
+NOTIFY_ON="failure"
+
+# Email (requires a working local MTA: mail or sendmail)
+# NOTIFY_EMAIL="ops@example.com,oncall@example.com"
+
+# Slack webhook (https://api.slack.com/messaging/webhooks)
+# NOTIFY_SLACK_WEBHOOK="https://hooks.slack.com/services/XXX/YYY/ZZZ"
+
+# Generic JSON webhook — receives {status, host, duration_seconds, backup_path, summary}
+# NOTIFY_WEBHOOK_URL="https://monitoring.example.com/hooks/cpanel-backup"
