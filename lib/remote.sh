@@ -49,7 +49,8 @@ _upload_rsync() {
     fi
 
     local src="${BACKUP_DIR}/"
-    local dst="${REMOTE_RSYNC_TARGET%/}/$(basename "${BACKUP_DIR}")/"
+    local dst
+    dst="${REMOTE_RSYNC_TARGET%/}/$(basename "${BACKUP_DIR}")/"
 
     log_info "Uploading via rsync to ${REMOTE_RSYNC_TARGET}"
     if [[ ${DRY_RUN} -eq 1 ]]; then
@@ -90,7 +91,8 @@ _upload_s3() {
     fi
 
     local prefix="${REMOTE_S3_PREFIX:-cpanel-backups}"
-    local dst="s3://${REMOTE_S3_BUCKET}/${prefix%/}/$(basename "${BACKUP_DIR}")"
+    local dst
+    dst="s3://${REMOTE_S3_BUCKET}/${prefix%/}/$(basename "${BACKUP_DIR}")"
     local endpoint_arg=""
     [[ -n "${REMOTE_S3_ENDPOINT:-}" ]] && endpoint_arg="--endpoint-url ${REMOTE_S3_ENDPOINT}"
     local sc_arg=""
@@ -131,7 +133,8 @@ _upload_sftp() {
     : "${REMOTE_SFTP_USER:?REMOTE_SFTP_USER not set in config}"
     : "${REMOTE_SFTP_PATH:?REMOTE_SFTP_PATH not set in config}"
     local port="${REMOTE_SFTP_PORT:-22}"
-    local remote_dir="${REMOTE_SFTP_PATH%/}/$(basename "${BACKUP_DIR}")"
+    local remote_dir
+    remote_dir="${REMOTE_SFTP_PATH%/}/$(basename "${BACKUP_DIR}")"
 
     log_info "Uploading via SFTP to ${REMOTE_SFTP_USER}@${REMOTE_SFTP_HOST}:${remote_dir}"
     if [[ ${DRY_RUN} -eq 1 ]]; then

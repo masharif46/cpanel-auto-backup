@@ -9,7 +9,7 @@
 
 set -Eeuo pipefail
 
-RED=$'\033[0;31m'; GRN=$'\033[0;32m'; YLW=$'\033[1;33m'; RST=$'\033[0m'
+RED=$'\033[0;31m'; GRN=$'\033[0;32m'; RST=$'\033[0m'
 
 if [[ $# -ne 1 ]]; then
     echo "Usage: $0 /backup/cpanel/YYYY-MM-DD_HHMMSS" >&2
@@ -61,7 +61,7 @@ check() {
 }
 
 echo "==== cpanel-auto-backup verify: ${DIR} ===="
-while IFS=$'\t' read -r label size path; do
+while IFS=$'\t' read -r label _ path; do
     [[ -z "${label}" ]] && continue
     check "${label}" "${path}"
 done < "${MANIFEST}"

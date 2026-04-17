@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+# Several globals defined in this file (colour codes, CLI flags,
+# retention defaults) are consumed by sourced library files under
+# lib/. ShellCheck can't follow the dynamic `source "${LIB_DIR}/…"`
+# loop at lint time, so it flags those as SC2034 "unused". Silencing
+# at file level.
+# shellcheck disable=SC2034
 #
 # cPanel Auto Backup
 # ==================
@@ -36,7 +42,7 @@ LOG_FILE="${LOG_DIR}/backup-$(date +%Y%m%d-%H%M%S).log"
 DEFAULT_CONFIG="/etc/cpanel-auto-backup/backup.conf"
 CONFIG_FILE="${DEFAULT_CONFIG}"
 
-# Defaults (backup.conf can override these)
+# Defaults (backup.conf can override these).
 BACKUP_ROOT="/backup/cpanel"
 RETENTION_DAYS=7
 RETENTION_WEEKLY=0
@@ -255,7 +261,8 @@ main() {
     phase_upload
     phase_rotate
 
-    local elapsed=$(( $(date +%s) - START_TS ))
+    local elapsed
+    elapsed=$(( $(date +%s) - START_TS ))
 
     # Disarm the ERR trap before notify/report so post-run shell teardown
     # can't flip a successful run into a "failed" email.

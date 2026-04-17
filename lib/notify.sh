@@ -72,7 +72,8 @@ _notify_email() {
         log_warn "Neither mail nor sendmail installed; skipping email notification"
         return 0
     fi
-    local subj="[cpanel-auto-backup ${status}] $(hostname) $(date +%F)"
+    local subj
+    subj="[cpanel-auto-backup ${status}] $(hostname) $(date +%F)"
     local rcpt="${NOTIFY_EMAIL}"
     log_info "Emailing ${rcpt}"
     if command -v mail &>/dev/null; then
